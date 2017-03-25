@@ -193,7 +193,7 @@ while not done:
                 print("Firing bullet ...!")
                 bullet = Bullet()
                 # Set the bullet so it is where the player is
-                bullet.rect.x = player.rect.x
+                bullet.rect.x = player.rect.x + player.rect.width/2
                 bullet.rect.y = player.rect.y
                 # Add the bullet to the lists
                 all_sprites_list.add(bullet)
