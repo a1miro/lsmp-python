@@ -16,6 +16,7 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
+YELLOW = (255,255,0)
  
 # Set the height and width of the screen
 screen_width = 700
@@ -50,7 +51,12 @@ class Player(pygame.sprite.Sprite):
         """ Set up the player on creation. """
         # Call the parent class (Sprite) constructor
         super().__init__()
- 
+        
+        # Speed in pixels per frame
+        self.xspeed = 0
+        self.yspeed = 0
+
+        ''' 
         self.image = pygame.Surface([20, 20])
         self.image.fill(RED)
  
@@ -64,6 +70,20 @@ class Player(pygame.sprite.Sprite):
         # the screen
         self.rect.x = 350
         self.rect.y = 370 
+        '''
+        # Load the image
+        self.image = pygame.image.load("images/player.png").convert()
+
+        # Set our transparent color
+        self.image.set_colorkey(WHITE)
+
+        # Fetch the rectangle object that has the dimensions fo the image
+        self.rect = self.image.get_rect();
+
+        # Set initial coordinates
+        self.rect.x = 350
+        self.rect.y = 370 
+
 
  
     def update(self):
@@ -88,7 +108,7 @@ class Bullet(pygame.sprite.Sprite):
         super().__init__()
  
         self.image = pygame.Surface([4, 10])
-        self.image.fill(BLACK)
+        self.image.fill(YELLOW)
  
         self.rect = self.image.get_rect()
  
@@ -144,7 +164,7 @@ clock = pygame.time.Clock()
 # Select the font to use, size, bold, italics
 font = pygame.font.SysFont('comicsansms', 25, True, False)
 # Render the text. "True" means anti-aliased text.
-game_over_text = font.render("Game over!!!!", True, BLACK)
+game_over_text = font.render("Game over!!!!", True, WHITE)
 
 score = 0
  
@@ -230,13 +250,13 @@ while not done:
     # --- Draw a frame
  
     # Clear the screen
-    screen.fill(WHITE)
+    screen.fill(BLACK)
  
     # Draw all the spites
     all_sprites_list.draw(screen)
 
     # Write current score
-    screen.blit(font.render("Score:" + str(score), True, BLACK), [10,10])
+    screen.blit(font.render("Score:" + str(score), True, WHITE), [10,10])
 
     # Go ahead and update the screen with what we've drawn.
     pygame.display.flip()
