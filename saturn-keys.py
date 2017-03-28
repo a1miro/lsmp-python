@@ -10,6 +10,7 @@
 """
 import pygame
 import random
+import math
  
 # Define some colors
 BLACK = (0, 0, 0)
@@ -32,11 +33,23 @@ class Block(pygame.sprite.Sprite):
     def __init__(self, color):
         # Call the parent class (Sprite) constructor
         super().__init__()
- 
+
+        '''
         self.image = pygame.Surface([20, 15])
         self.image.fill(color)
  
         self.rect = self.image.get_rect()
+        '''
+        # Load the image
+        self.image = pygame.image.load("images/meteor.png").convert()
+
+        # Set our transparent color
+        self.image.set_colorkey(BLACK)
+
+        # Fetch the rectangle object that has the dimensions fo the image
+        self.rect = self.image.get_rect();
+
+
 
     def update(self):
         # Move the block one step down
@@ -75,7 +88,7 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.image.load("images/player.png").convert()
 
         # Set our transparent color
-        self.image.set_colorkey(WHITE)
+        self.image.set_colorkey(BLACK)
 
         # Fetch the rectangle object that has the dimensions fo the image
         self.rect = self.image.get_rect();
@@ -125,6 +138,13 @@ pygame.init()
  
 screen = pygame.display.set_mode([screen_width, screen_height])
 
+
+# --- Background image
+background = pygame.image.load("images/saturn.jpg").convert()
+
+# Before the loop, load the sounds:
+click_sound = pygame.mixer.Sound("sound/laser5.ogg")
+
 # --- Sprite lists
  
 # This is a list of every sprite. All blocks and the player block as well.
@@ -144,7 +164,7 @@ for i in range(50):
  
     # Set a random location for the block
     block.rect.x = random.randrange(screen_width)
-    block.rect.y = random.randrange(350)
+    block.rect.y = random.randrange(screen_height - 100)
  
     # Add the block to the list of objects
     block_list.add(block)
@@ -198,6 +218,7 @@ while not done:
                 # Add the bullet to the lists
                 all_sprites_list.add(bullet)
                 bullet_list.add(bullet)
+                click_sound.play()
 
             # User let up on a key
         elif event.type == pygame.KEYUP:
@@ -242,6 +263,7 @@ while not done:
         for block in block_list:
             if block.rect.y >= screen_height:
                 block.rect.y = 0
+                block.rect.x = random.randrange(screen_width)
 
         if len(block_list) == 0:
             final_message = "You won!!!"
@@ -250,8 +272,10 @@ while not done:
     # --- Draw a frame
  
     # Clear the screen
-    screen.fill(BLACK)
- 
+    #screen.fill(BLACK)
+    # Draw background first
+    screen.blit(background, [0,0])
+
     # Draw all the spites
     all_sprites_list.draw(screen)
 
@@ -260,17 +284,17 @@ while not done:
 
     # Go ahead and update the screen with what we've drawn.
     pygame.display.flip()
- 
+
     # --- Limit to 20 frames per second
     clock.tick(60)
 
-   
+
 
 # Clear the screen
 screen.fill(WHITE)
- 
+
 screen.blit(font.render(final_message, True, BLACK), [280,200])
 pygame.display.flip()
 pygame.time.delay(3000)
- 
+
 pygame.quit()
